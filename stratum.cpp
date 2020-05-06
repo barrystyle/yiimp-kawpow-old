@@ -115,6 +115,8 @@ YAAMP_ALGO g_algos[] =
 	{"scryptn", scryptn_hash, 0x10000, 0, 0},
 	{"neoscrypt", neoscrypt_hash, 0x10000, 0, 0},
 
+	{"kawpow", kawpow_hash, 1, 0, 0},
+
 	{"c11", c11_hash, 1, 0, 0},
 	{"x11", x11_hash, 1, 0, 0},
 	{"x12", x12_hash, 1, 0, 0},
