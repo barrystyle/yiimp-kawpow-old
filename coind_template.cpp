@@ -1,6 +1,9 @@
 
 #include "stratum.h"
 
+void set_kawpow_height(int height);
+void set_kawpow_coind(YAAMP_COIND* coind);
+
 void coind_getauxblock(YAAMP_COIND *coind)
 {
 	if(!coind->isaux) return;
@@ -298,6 +301,7 @@ YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 	templ->created = time(NULL);
 	templ->value = json_get_int(json_result, "coinbasevalue");
 	templ->height = json_get_int(json_result, "height");
+	set_kawpow_height(templ->height);
 	sprintf(templ->version, "%08x", (unsigned int)json_get_int(json_result, "version"));
 	sprintf(templ->ntime, "%08x", (unsigned int)json_get_int(json_result, "curtime"));
 
@@ -307,6 +311,21 @@ YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 	strcpy(templ->prevhash_hex, prev ? prev : "");
 	const char *flags = json_get_string(json_coinbaseaux, "flags");
 	strcpy(templ->flags, flags ? flags : "");
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	memset(templ->header_hash, 0, sizeof(templ->header_hash));
+	const char *pprpcheader = json_get_string(json_result, "pprpcheader");
+	strcpy(templ->header_hash, pprpcheader ? pprpcheader : "0000000000000000000000000000000000000000000000000000000000000000");
+
+	if (!pprpcheader) {
+		debuglog("warning: ensure you have set -miningaddress on coin daemon\n");
+		return NULL;
+	}
+
+	set_kawpow_coind(coind);
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// LBC Claim Tree (with wallet gbt patch)
 	const char *claim = json_get_string(json_result, "claimtrie");
@@ -512,14 +531,7 @@ bool coind_create_job(YAAMP_COIND *coind, bool force)
 
 	CommonLock(&coind->mutex);
 
-	YAAMP_JOB_TEMPLATE *templ;
-
-	// DCR gbt block header is not compatible with getwork submit, so...
-
-	if (coind->usegetwork && strcmp(coind->rpcencoding, "DCR") == 0)
-		templ = decred_create_worktemplate(coind);
-	else
-		templ = coind_create_template(coind);
+	YAAMP_JOB_TEMPLATE *templ = coind_create_template(coind);
 
 	if(!templ)
 	{

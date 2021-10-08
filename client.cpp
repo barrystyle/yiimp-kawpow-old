@@ -525,7 +525,7 @@ void *client_thread(void *p)
 	}
 	memset(client, 0, sizeof(YAAMP_CLIENT));
 
-	client->reconnectable = true;
+	client->reconnectable = false;
 	client->speed = 1;
 	client->created = time(NULL);
 	client->last_best = time(NULL);
@@ -590,17 +590,18 @@ void *client_thread(void *p)
 		}
 
 		bool b = false;
+
 		if(!strcmp(method, "mining.subscribe"))
-			b = client_subscribe(client, json_params);
+			b = client_send_result(client, "true");
 
 		else if(!strcmp(method, "mining.authorize"))
-			b = client_authorize(client, json_params);
+			b = kawpow_authorize(client, json_params);
 
 		else if(!strcmp(method, "mining.ping"))
 			b = client_send_result(client, "\"pong\"");
 
 		else if(!strcmp(method, "mining.submit"))
-			b = client_submit(client, json_params);
+			b = kawpow_submit(client, json_params);
 
 		else if(!strcmp(method, "mining.suggest_difficulty"))
 			b = client_suggest_difficulty(client, json_params);

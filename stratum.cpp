@@ -226,6 +226,8 @@ YAAMP_ALGO *stratum_find_algo(const char *name)
 
 int main(int argc, char **argv)
 {
+	// kawpow_test();
+
 	if(argc < 2)
 	{
 		printf("usage: %s <algo>\n", argv[0]);

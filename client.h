@@ -92,6 +92,8 @@ public:
 	int jobid_sent;
 	int jobid_locked;
 
+	uint256 last_target;
+
 	YAAMP_CLIENT_ALGO algos_subscribed[YAAMP_MAXALGOS];
 	int job_history[YAAMP_JOB_MAXHISTORY];
 

@@ -349,7 +349,7 @@ static bool ntime_valid_range(const char ntimehex[])
 	return (abs(rawtime - ntime) < (30 * 60));
 }
 
-static bool valid_string_params(json_value *json_params)
+bool valid_string_params(json_value *json_params)
 {
 	for(int p=0; p < json_params->u.array.length; p++) {
 		if (!json_is_string(json_params->u.array.values[p]))

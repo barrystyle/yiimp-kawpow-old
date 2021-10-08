@@ -25,6 +25,18 @@ std::string base_blob<BITS>::GetHex() const
 }
 
 template <unsigned int BITS>
+int base_blob<BITS>::CompareTo(const base_blob<BITS>& b) const
+{
+    for (int i = WIDTH - 1; i >= 0; i--) {
+        if (data[i] < b.data[i])
+            return -1;
+        if (data[i] > b.data[i])
+            return 1;
+    }
+    return 0;
+}
+
+template <unsigned int BITS>
 void base_blob<BITS>::SetHex(const char* psz)
 {
     memset(data, 0, sizeof(data));
@@ -73,6 +85,7 @@ template void base_blob<160>::SetHex(const char*);
 template void base_blob<160>::SetHex(const std::string&);
 
 // Explicit instantiations for base_blob<256>
+template int base_blob<256>::CompareTo(const base_blob<256>&) const;
 template base_blob<256>::base_blob(const std::vector<unsigned char>&);
 template std::string base_blob<256>::GetHex() const;
 template std::string base_blob<256>::ToString() const;
