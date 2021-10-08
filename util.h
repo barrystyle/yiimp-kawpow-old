@@ -115,13 +115,8 @@ int getblocheight(const char *coinb1);
 
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
-#endif
-
-#ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
+inline int32_t max(int32_t a, int32_t b) { return((a) > (b) ? a : b); }
+inline int32_t min(int32_t a, int32_t b) { return((a) < (b) ? a : b); }
 
 //////////////////////////////////////////////////////////////////////////
 

@@ -1,6 +1,8 @@
 
 #include "stratum.h"
 
+void set_kawpow_height(int height);
+
 void coind_getauxblock(YAAMP_COIND *coind)
 {
 	if(!coind->isaux) return;
@@ -65,6 +67,7 @@ YAAMP_JOB_TEMPLATE *coind_create_template_memorypool(YAAMP_COIND *coind)
 	sprintf(templ->ntime, "%08x", (unsigned int)json_get_int(json_result, "time"));
 	strcpy(templ->nbits, json_get_string(json_result, "bits"));
 	strcpy(templ->prevhash_hex, json_get_string(json_result, "previousblockhash"));
+	strcpy(templ->header_hash, json_get_string(json_result, "pprpcheader"));
 
 	json_value_free(json);
 
@@ -298,6 +301,7 @@ YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 	templ->created = time(NULL);
 	templ->value = json_get_int(json_result, "coinbasevalue");
 	templ->height = json_get_int(json_result, "height");
+	set_kawpow_height(templ->height);
 	sprintf(templ->version, "%08x", (unsigned int)json_get_int(json_result, "version"));
 	sprintf(templ->ntime, "%08x", (unsigned int)json_get_int(json_result, "curtime"));
 
@@ -307,6 +311,19 @@ YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 	strcpy(templ->prevhash_hex, prev ? prev : "");
 	const char *flags = json_get_string(json_coinbaseaux, "flags");
 	strcpy(templ->flags, flags ? flags : "");
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	memset(templ->header_hash, 0, sizeof(templ->header_hash));
+	const char *pprpcheader = json_get_string(json_result, "pprpcheader");
+	strcpy(templ->header_hash, pprpcheader ? pprpcheader : "0000000000000000000000000000000000000000000000000000000000000000");
+
+	if (!pprpcheader) {
+		debuglog("warning: ensure you have set -miningaddress on coin daemon\n");
+		return NULL;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// LBC Claim Tree (with wallet gbt patch)
 	const char *claim = json_get_string(json_result, "claimtrie");

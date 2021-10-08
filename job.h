@@ -27,6 +27,8 @@ struct YAAMP_JOB_TEMPLATE
 	char prevhash_hex[512];
 	char prevhash_be[512];
 
+	char header_hash[512];
+
 	char extradata_hex[512];
 	char extradata_be[512];
 

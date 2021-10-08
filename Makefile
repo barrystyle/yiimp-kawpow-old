@@ -1,10 +1,10 @@
 CC=gcc
 
-CFLAGS= -g -march=native -I.
+CFLAGS= -g -I.
 SQLFLAGS= `mysql_config --cflags --libs`
 LDFLAGS=-O2 `mysql_config --libs`
 
-LDLIBS=iniparser/libiniparser.a algos/libalgos.a sha3/libhash.a -lpthread -lgmp -lm -lstdc++
+LDLIBS=iniparser/libiniparser.a algos/libalgos.a sha3/libhash.a -lpthread -lgmp -lm -lstdc++ -lcrypto -lssl -lcurl
 LDLIBS+=-lmysqlclient
 
 SOURCES=stratum.cpp db.cpp coind.cpp coind_aux.cpp coind_template.cpp coind_submit.cpp util.cpp list.cpp \

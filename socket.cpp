@@ -164,6 +164,8 @@ json_value *socket_nextjson(YAAMP_SOCKET *s, YAAMP_CLIENT *client)
 		return NULL;
 	}
 
+	debuglog("%s\n", b);
+
 	*p = saved;
 	while(*p && *p != '{')
 		p++;
@@ -192,6 +194,8 @@ int socket_send_raw(YAAMP_SOCKET *s, const char *buffer, int size)
 	if (g_debuglog_socket) {
 		debuglog("socket send: %s", buffer);
 	}
+
+	printf("%s\n", buffer);
 
 	int res = send(s->sock, buffer, size, MSG_NOSIGNAL);
 	return res;
