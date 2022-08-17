@@ -248,8 +248,6 @@ bool kawpow_submit(YAAMP_CLIENT* client, json_value* json_params)
 
     //! intermediate
     uint256 hashbin = uint256S(to_hex(powHash));
-    stratumlog("%s\n", hashbin.ToString().c_str());
-
     uint64_t hash_int = get_hash_difficulty((uint8_t*)&hashbin);
     double share_diff = diff_to_target(hash_int);
 
@@ -260,7 +258,7 @@ bool kawpow_submit(YAAMP_CLIENT* client, json_value* json_params)
 
     stratumlog("client %d sent powhash %s\n", client->id, to_hex(powHash).c_str());
 
-    kawpow_submit_ok(client);
+    client_send_result(client, "true");
     client_record_difficulty(client);
     client->submit_bad = 0;
     client->shares++;
